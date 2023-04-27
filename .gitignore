@@ -1,0 +1,9 @@
+.gitignore
+**/bin
+**/obj
+**/server-*
+**/*.swp
+**/appsettings.json
+.deploy_host
+DnsBlDatabase.json
+lists_vpn/

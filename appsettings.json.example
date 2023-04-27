@@ -1,0 +1,27 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "System": "Information",
+      "Microsoft": "None"
+    },
+    "Console": {
+      "FormatterName": "simple",
+      "FormatterOptions": {
+        "SingleLine": true
+      }
+    }
+  },
+  "IpInfoSettings": {
+    "VpnListPath": "VpnList.txt",
+    "DatacenterListPath": "DataCenterList.txt",
+    "DnsBlDatabasePath": "DnsBlDatabase.json"
+  },
+  "IpTestControllerSettings": {
+    "TimeOut": 1500
+  },
+  "Auth": {
+    "SecretHeader": "Secret",
+    "SecretValue": "VerySecret"
+  }
+}

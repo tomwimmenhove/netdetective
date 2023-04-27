@@ -1,0 +1,10 @@
+[
+  {
+    "Server": "dnsbl.someserver.com",
+    "Name": "Someserver's DNSBL",
+    "IpFamily": "Both",
+    "Responses": {
+      "127.0.0.2": "Spam"
+    }
+  }
+]
