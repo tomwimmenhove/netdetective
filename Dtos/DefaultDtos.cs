@@ -1,12 +1,14 @@
-using System.ComponentModel;
-
 namespace netdetective.Dtos;
 
 public class SimpleErrorResponeDto
 {
-    [Description("Wether or not the call was successful.")]
+    /// <summary>
+    /// Whether or not the call was successful.
+    /// </summary>
     public bool Success { get; set; } = false;
 
-    [Description("An error message.")]
+    /// <summary>
+    /// An error message.
+    /// </summary>
     public string Message { get; set; } = default!;
 }

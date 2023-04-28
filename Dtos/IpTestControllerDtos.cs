@@ -1,13 +1,16 @@
 using netdetective.IpTests;
-using System.ComponentModel;
 
 namespace netdetective.Dtos;
 
 public class QueryResult
 {
-    [Description("Wether or not the call was successful.")]
+    /// <summary>
+    /// Whether or not the call was successful.
+    /// </summary>
     public bool Success { get; set; } = true;
 
-    [Description("The result of the query.")]
+    /// <summary>
+    /// The result of the query.
+    /// </summary>
     public IpInfoResults Result { get; set; } = default!;
 }

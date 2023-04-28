@@ -2,6 +2,7 @@ using netdetective.IpTests;
 using netdetective.Controllers;
 using netdetective.Auth;
 using netdetective.RequestInfoProviders;
+using Microsoft.OpenApi.Models;
 
 IConfiguration configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
@@ -18,7 +19,13 @@ builder.Services.AddScoped<IRapidApiRequestInfoProvider, RapidApiRequestInfoProv
 builder.Services.AddSingleton<IIpTestFactory, IpInfoFactory>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "NetDetective", Version = "v1" });
+
+    var filePath = Path.Combine(System.AppContext.BaseDirectory, "NetDetective.xml");
+         c.IncludeXmlComments(filePath);
+});
 
 builder.WebHost.ConfigureKestrel(options =>
 {

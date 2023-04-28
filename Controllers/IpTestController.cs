@@ -24,8 +24,15 @@ public class IpTestController : ControllerBase
         _requestInfoProvider = requestInfoProvider;
     }
 
+    /// <summary>
+    /// Query information about an IP address.
+    /// </summary>
+    /// <param name="ipAddress">
+    /// The IP address to use for the query.
+    /// Defaults to the ip address of the connecting client.
+    /// </param>
+    /// <returns>Information about the given IP address</returns>
     [HttpGet("/query")]
-    [EndpointDescription("Query information about an IP address")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(QueryResult))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(SimpleErrorResponeDto))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(SimpleErrorResponeDto))]

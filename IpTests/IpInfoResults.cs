@@ -1,80 +1,127 @@
 using netdetective.BlackList;
-using System.ComponentModel;
 
 namespace netdetective.IpTests;
 
 public class IpInfoResults
 {
-    [Description("The IP address being queried.")]
+    /// <summary>
+    /// The IP address being queried.
+    /// </summary>
     public string IpAddress {get; }
 
-    [Description("The IP address is a VPN.")]
+    /// <summary>
+    /// The IP address is a VPN.
+    /// </summary>
     public bool IsVpn { get; }
     
-    [Description("Indicates whether the IP address belongs to a data center.")]
+    /// <summary>
+    /// Indicates whether the IP address belongs to a data center.
+    /// </summary>
     public bool IsDataCenter { get; }
 
-    [Description("The IP address is known for brute-force attacks.")]
+    /// <summary>
+    /// The IP address is known for brute-force attacks.
+    /// </summary>
     public bool IsBruteForce { get; }
     
-    [Description("The IP address is known for sending spam.")]
+    /// <summary>
+    /// The IP address is known for sending spam.
+    /// </summary>
     public bool IsSpam { get; }
     
-    [Description("The IP address is a bogon (i.e., it should not appear in the public Internet routing table).")]
+    /// <summary>
+    /// The IP address is a bogon (i.e., it should not appear in the public Internet routing table).
+    /// </summary>
     public bool IsBogon { get; }
     
-    [Description("The IP address is an open HTTP proxy.")]
+    /// <summary>
+    /// The IP address is an open HTTP proxy.
+    /// </summary>
     public bool IsProxyHttp { get; }
     
-    [Description("The IP address is an open SOCKS proxy.")]
+    /// <summary>
+    /// The IP address is an open SOCKS proxy.
+    /// </summary>
     public bool IsProxySocks { get; }
 
-    [Description("The IP address is a web proxy.")]
+    /// <summary>
+    /// The IP address is a web proxy.
+    /// </summary>
     public bool IsProxyWeb { get; }
 
-    [Description("The IP address is a type of proxy.")]
+    /// <summary>
+    /// The IP address is a type of proxy.
+    /// </summary>
     public bool IsProxyOther { get; }
     
-    [Description("The IP address is used to relay SMTP traffic.")]
+    /// <summary>
+    /// The IP address is used to relay SMTP traffic.
+    /// </summary>
     public bool IsSmtpRelay { get; }
     
-    [Description("The IP address is vulnerable webserver that can be used for abuse.")]
+    /// <summary>
+    /// The IP address is vulnerable webserver that can be used for abuse.
+    /// </summary>
     public bool IsWebVuln { get; }
     
-    [Description("The IP address should not be used for email.")]
+    /// <summary>
+    /// The IP address should not be used for email.
+    /// </summary>
     public bool IsNoMail { get; }
     
-    [Description("The IP address is a zombie (i.e., part of a botnet).")]
+    /// <summary>
+    /// The IP address is a zombie (i.e., part of a botnet).
+    /// </summary>
     public bool IsZombie { get; }
 
-    [Description("The IP address is a potential zombie.")]
+    /// <summary>
+    /// The IP address is a potential zombie.
+    /// </summary>
     public bool IsPotentialZombie { get; }
     
-    [Description("The IP address is dynamically assigned.")]
+    /// <summary>
+    /// The IP address is dynamically assigned.
+    /// </summary>
     public bool IsDynamic { get; }
     
-    [Description("The IP address is not associated with a server.")]
+    /// <summary>
+    /// The IP address is not associated with a server.
+    /// </summary>
     public bool IsNoServer { get; }
     
-    [Description("The IP address is a misconfigured server.")]
+    /// <summary>
+    /// The IP address is a misconfigured server.
+    /// </summary>
     public bool IsBadConf { get; }
         
-    [Description("The IP address is known for DDoS attacks.")]
+    /// <summary>
+    /// The IP address is known for DDoS attacks.
+    /// </summary>
     public bool IsDDos { get; }
     
-    [Description("The IP address belongs to an OpenDNS resolver.")]
+    /// <summary>
+    /// The IP address belongs to an OpenDNS resolver.
+    /// </summary>
     public bool IsOpenDns { get; }
     
-    [Description("The IP address has been compromised.")]
+    /// <summary>
+    /// The IP address has been compromised.
+    /// </summary>
     public bool IsCompromised { get; }
     
-    [Description("The IP address is part of a worm infection.")]
+    /// <summary>
+    /// The IP address is part of a worm infection.
+    /// </summary>
     public bool IsWorm { get; }
         
-    [Description("The IP address is an IRC drone")]
+    /// <summary>
+    /// The IP address is an IRC drone
+    /// </summary>
     public bool IsIrcDrone { get; }
     
-    [Description("The IP address is not associated with spamming.")]
+    /// <summary>
+    /// The IP address is not associated with spamming.
+    /// </summary>
     public bool IsNotSpam { get; }
     
     public IpInfoResults(string ipAddress, X4BNetListsVpnResults vpnListResults, DnsBlFlags dnsBlResponse)
