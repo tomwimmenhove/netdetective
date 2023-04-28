@@ -13,8 +13,9 @@ public class DnsBl
         _servers = servers;
     }
 
-    public static async Task<DnsBl> Create(string dnsBlDatabasePath)
+    public static async Task<DnsBl> Create(ILogger logger, string dnsBlDatabasePath)
     {
+        logger.LogInformation($"Reading DnsBl database {dnsBlDatabasePath}");
         var json = await File.ReadAllTextAsync(dnsBlDatabasePath);
 
         var servers = System.Text.Json.JsonSerializer.Deserialize<DnsBlServer[]>(json);

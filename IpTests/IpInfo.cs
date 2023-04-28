@@ -15,10 +15,10 @@ public class IpInfo : IIpTest
         _dnsBl = dnsBl;
     }
 
-    public static async Task<IpInfo> Create(IOptions<IpInfoSettings> settings)
+    public static async Task<IpInfo> Create(ILogger logger, IOptions<IpInfoSettings> settings)
     {
-        var listsVpn = await X4BNetListsVpn.Create(settings.Value.VpnListPath, settings.Value.DatacenterListPath);
-        var dnsBl = await DnsBl.Create(settings.Value.DnsBlDatabasePath);
+        var listsVpn = new X4BNetListsVpn(logger, settings.Value.VpnListPath, settings.Value.DatacenterListPath);
+        var dnsBl = await DnsBl.Create(logger, settings.Value.DnsBlDatabasePath);
 
         return new IpInfo(listsVpn, dnsBl);
     }
@@ -36,7 +36,7 @@ public class IpInfo : IIpTest
             throw new FormatException($"Invalid IP address family");
         }
 
-        var listVpnResults = _listsVpn.Test(address);
+        var listVpnResults = await _listsVpn.Test(address);
         var dnsBlResults = await _dnsBl.Test(address, token);
 
         return new IpInfoResults(address.ToString(), listVpnResults, dnsBlResults);

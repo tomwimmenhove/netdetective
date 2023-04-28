@@ -1,34 +1,41 @@
 using System.Net;
+using netdetective.Utils;
 
 namespace netdetective.IpTests;
 
 // Named after https://github.com/X4BNet/lists_vpn
 public class X4BNetListsVpn
 {
-    private List<IPNetwork> _vpnNetworks;
-    private List<IPNetwork> _dataCenterNetworks;
+    private readonly ILogger _logger;
+    private readonly FileLatest _vpnListFile;
+    private readonly FileLatest _datacenterListFile;
+    private List<IPNetwork> _vpnNetworks = new();
+    private List<IPNetwork> _dataCenterNetworks = new();
 
-    private X4BNetListsVpn(List<IPNetwork> vpnNetworks, List<IPNetwork> dataCenterNetworks)
+    public X4BNetListsVpn(ILogger logger, string vpnListPath, string datacenterListPath)
     {
-        _vpnNetworks = vpnNetworks;
-        _dataCenterNetworks = dataCenterNetworks;
+        _logger = logger;
+        _vpnListFile = new FileLatest(vpnListPath);
+        _datacenterListFile = new FileLatest(datacenterListPath);
     }
 
-    public static async Task<X4BNetListsVpn> Create(string vpnListPath, string datacenterListPath)
-    {
-        var vpnNetworks = await ReadNetworks(vpnListPath);
-        var dataCenterNetworks = await ReadNetworks(datacenterListPath);
-
-        return new X4BNetListsVpn(vpnNetworks, dataCenterNetworks);
-    }
-
-    public X4BNetListsVpnResults Test(IPAddress ipAddress)
+    public async Task<X4BNetListsVpnResults> Test(IPAddress ipAddress)
     {
         var result = X4BNetListsVpnResults.None;
+
+        if (_vpnListFile.HasNewWrites(true))
+        {
+            _vpnNetworks = await ReadNetworks(_vpnListFile.Path);
+        }
 
         if (_vpnNetworks.Any(x => x.Contains(ipAddress)))
         {
             result |= X4BNetListsVpnResults.Vpn;
+        }
+
+        if (_datacenterListFile.HasNewWrites(true))
+        {
+            _dataCenterNetworks = await ReadNetworks(_datacenterListFile.Path);
         }
 
         if (_dataCenterNetworks.Any(x => x.Contains(ipAddress)))
@@ -39,11 +46,17 @@ public class X4BNetListsVpn
         return result;
     }
 
-    public bool IsVpn(IPAddress ipAddress) => _vpnNetworks.Any(x => x.Contains(ipAddress));
-    public bool IsDataCenter(IPAddress ipAddress) => _dataCenterNetworks.Any(x => x.Contains(ipAddress));
-
-    private static async Task<List<IPNetwork>> ReadNetworks(string path)
+    private static FileSystemWatcher CreateFileSystemWatcher(string fullPath) => new FileSystemWatcher
     {
+        Path = Path.GetDirectoryName(fullPath)!,
+        Filter = Path.GetFileName(fullPath),
+        NotifyFilter = NotifyFilters.LastWrite,
+        EnableRaisingEvents = true
+    };
+
+    private async Task<List<IPNetwork>> ReadNetworks(string path)
+    {
+        _logger.LogInformation($"Reading X4BNetListsVpn database {path}");
         var lines = await File.ReadAllLinesAsync(path);
 
         var allNetworks = new List<IPNetwork>();
@@ -55,7 +68,7 @@ public class X4BNetListsVpn
             }
             catch (FormatException e)
             {
-                Console.Error.WriteLine($"Adding network \"{line}\" failed: {e.Message}");
+                _logger.LogError($"Adding network \"{line}\" failed: {e.Message}");
             }
         }
 
