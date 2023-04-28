@@ -1,5 +1,6 @@
 using System.Net;
 using DnsClient;
+using DnsClient.Protocol;
 using netdetective.Utils;
 
 namespace netdetective.BlackList;
@@ -52,20 +53,27 @@ public class DnsBl
         {
             var task = await Task.WhenAny(testLookupTasks.Select(x => x.Task));
             var entry = testLookupTasks.First(x => x.Task == task);
+            testLookupTasks.Remove(entry);
 
-            if (task.Status == TaskStatus.RanToCompletion)
+            ARecord[] arecords;
+            try
             {
-                var arecords = task.Result.Answers.ARecords().ToArray();
-                foreach(var arecord in arecords)
-                {
-                    if (entry.Server.Responses.TryGetValue(arecord.Address.ToString(), out var addFlags))
-                    {
-                        results |= addFlags;
-                    }
-                }
+                var result = await entry.Task;
+                arecords = result.Answers.ARecords().ToArray();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Failed to get results from {entry.Server}: {e.Message}");
+                continue;
             }
 
-            testLookupTasks.Remove(entry);
+            foreach (var arecord in arecords)
+            {
+                if (entry.Server.Responses.TryGetValue(arecord.Address.ToString(), out var addFlags))
+                {
+                    results |= addFlags;
+                }
+            }
         }
 
         return results;
