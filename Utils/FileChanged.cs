@@ -1,12 +1,12 @@
 namespace netdetective.Utils;
 
-public class FileLatest
+public class FileChanged
 {
     private DateTime _lastWriteTime = DateTime.MinValue;
 
     public string Path { get; }
 
-    public FileLatest(string path, bool update = false)
+    public FileChanged(string path, bool update = false)
     {
         Path = path;
         if (update)
@@ -20,7 +20,7 @@ public class FileLatest
         _lastWriteTime = File.GetLastWriteTime(Path);
     }
 
-    public bool HasNewWrites(bool update)
+    public bool LastWriteTimeHasChanged(bool update)
     {
         var lastWriteTime = File.GetLastWriteTime(Path);
         if (lastWriteTime > _lastWriteTime)

@@ -11,13 +11,13 @@ namespace netdetective.Controllers;
 public class IpTestController : ControllerBase
 {
     private readonly IpTestControllerSettings _settings;
-    private readonly IIpTestFactory _ipTestFactory;
+    private readonly IIpQuerier _ipQuerier;
     private readonly IRapidApiRequestInfoProvider _requestInfoProvider;
 
-    public IpTestController(IIpTestFactory ipTestFactory,
+    public IpTestController(IIpQuerier ipQuerier,
         IOptions<IpTestControllerSettings> settings, IRapidApiRequestInfoProvider requestInfoProvider)
     {
-        _ipTestFactory = ipTestFactory;
+        _ipQuerier = ipQuerier;
         _settings = settings.Value;
         _requestInfoProvider = requestInfoProvider;
     }
@@ -43,12 +43,11 @@ public class IpTestController : ControllerBase
             return BadRequest(new SimpleErrorResponeDto { Message = "Unable to determine IP address"});            
         }
 
-        var ipTest = await _ipTestFactory.GetInstance();
         var cts = new CancellationTokenSource(_settings.TimeOut);
 
         try
         {
-            var result = await ipTest.Test(ipAddress, cts.Token);
+            var result = await _ipQuerier.Query(ipAddress, cts.Token);
             return Ok(new QueryResult { Result = result});
         }
         catch (FormatException e)

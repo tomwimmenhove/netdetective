@@ -124,12 +124,12 @@ public class IpInfoResults
     /// </summary>
     public bool IsNotSpam { get; }
     
-    public IpInfoResults(string ipAddress, X4BNetListsVpnResults vpnListResults, DnsBlFlags dnsBlResponse)
+    public IpInfoResults(string ipAddress, X4BNetListsFlags vpnListResults, DnsBlFlags dnsBlResponse)
     {
         IpAddress = ipAddress;
         
-        IsVpn = vpnListResults.HasFlag(X4BNetListsVpnResults.Vpn);
-        IsDataCenter = vpnListResults.HasFlag(X4BNetListsVpnResults.DataCenter);
+        IsVpn = vpnListResults.HasFlag(X4BNetListsFlags.Vpn);
+        IsDataCenter = vpnListResults.HasFlag(X4BNetListsFlags.DataCenter);
 
         IsBruteForce = dnsBlResponse.HasFlag(DnsBlFlags.BruteForce);
         IsSpam = dnsBlResponse.HasFlag(DnsBlFlags.Spam);

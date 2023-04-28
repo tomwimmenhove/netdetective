@@ -22,8 +22,8 @@ public class ConnectionValidation
 
     public async Task InvokeAsync(HttpContext context, IServiceProvider serviceProvider)
     {
-        using var scope = serviceProvider.CreateScope();
-        var requestInfoProvider = scope.ServiceProvider.GetRequiredService<IRapidApiRequestInfoProvider>();
+        using var serviceScope = serviceProvider.CreateScope();
+        var requestInfoProvider = serviceScope.ServiceProvider.GetRequiredService<IRapidApiRequestInfoProvider>();
 
         var hasAccess = _settings.SecretValue == null || requestInfoProvider.GetSecret() == _settings.SecretValue;
         LogRequest(context, requestInfoProvider, hasAccess);

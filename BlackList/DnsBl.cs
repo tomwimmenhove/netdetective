@@ -1,37 +1,45 @@
 using System.Net;
 using DnsClient;
+using netdetective.Utils;
 
 namespace netdetective.BlackList;
 
 public class DnsBl
 {
     private readonly LookupClient _client = new LookupClient(new LookupClientOptions { UseCache = true } );
-    private readonly IEnumerable<DnsBlServer> _servers;
+    private readonly ILogger<DnsBl> _logger;
+    private readonly FileChanged _serverListFile;
+    private DnsBlServer[] _servers = Array.Empty<DnsBlServer>();
 
-    private DnsBl(IEnumerable<DnsBlServer> servers)
+    public DnsBl(ILogger<DnsBl> logger, string dnsBlDatabasePath)
     {
-        _servers = servers;
+        _logger = logger;
+        _serverListFile = new FileChanged(dnsBlDatabasePath);
     }
 
-    public static async Task<DnsBl> Create(ILogger logger, string dnsBlDatabasePath)
+    private async Task UpdateServerList()
     {
-        logger.LogInformation($"Reading DnsBl database {dnsBlDatabasePath}");
-        var json = await File.ReadAllTextAsync(dnsBlDatabasePath);
+        if (!_serverListFile.LastWriteTimeHasChanged(true))
+        {
+            return;
+        }
+
+        _logger.LogInformation($"Reading DnsBl database {_serverListFile.Path}");
+        var json = await File.ReadAllTextAsync(_serverListFile.Path);
 
         var servers = System.Text.Json.JsonSerializer.Deserialize<DnsBlServer[]>(json);
         if (servers == null)
         {
-            throw new FormatException($"{dnsBlDatabasePath} was not in the correct format");
+            throw new FormatException($"{_serverListFile.Path} was not in the correct format");
         }
 
-        return new DnsBl(servers);
+        _servers = servers;
     }
 
-    public async Task<DnsBlFlags> Test(string ipAddress, CancellationToken token) =>
-        await Test(IPAddress.Parse(ipAddress), token);
-
-    public async Task<DnsBlFlags> Test(IPAddress ipAddress, CancellationToken token)
+    public async Task<DnsBlFlags> Query(IPAddress ipAddress, CancellationToken token)
     {
+        await UpdateServerList();
+
         var testLookupTasks = _servers.Select(x => new
             {
                 Server = x,

@@ -16,7 +16,7 @@ builder.Services.Configure<ConnectionValidationSettings>(configuration.GetSectio
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IRapidApiRequestInfoProvider, RapidApiRequestInfoProvider>();
-builder.Services.AddSingleton<IIpTestFactory, IpInfoFactory>();
+builder.Services.AddSingleton<IIpQuerier, IpQuerier>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>

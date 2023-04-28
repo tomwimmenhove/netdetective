@@ -4,43 +4,43 @@ using netdetective.Utils;
 namespace netdetective.IpTests;
 
 // Named after https://github.com/X4BNet/lists_vpn
-public class X4BNetListsVpn
+public class X4BNetLists
 {
-    private readonly ILogger _logger;
-    private readonly FileLatest _vpnListFile;
-    private readonly FileLatest _datacenterListFile;
+    private readonly ILogger<X4BNetLists> _logger;
+    private readonly FileChanged _vpnListFile;
+    private readonly FileChanged _datacenterListFile;
     private List<IPNetwork> _vpnNetworks = new();
     private List<IPNetwork> _dataCenterNetworks = new();
 
-    public X4BNetListsVpn(ILogger logger, string vpnListPath, string datacenterListPath)
+    public X4BNetLists(ILogger<X4BNetLists> logger, string vpnListPath, string datacenterListPath)
     {
-        _logger = logger;
-        _vpnListFile = new FileLatest(vpnListPath);
-        _datacenterListFile = new FileLatest(datacenterListPath);
+        _logger = logger;;
+        _vpnListFile = new FileChanged(vpnListPath);
+        _datacenterListFile = new FileChanged(datacenterListPath);
     }
 
-    public async Task<X4BNetListsVpnResults> Test(IPAddress ipAddress)
+    public async Task<X4BNetListsFlags> Query(IPAddress ipAddress)
     {
-        var result = X4BNetListsVpnResults.None;
+        var result = X4BNetListsFlags.None;
 
-        if (_vpnListFile.HasNewWrites(true))
+        if (_vpnListFile.LastWriteTimeHasChanged(true))
         {
             _vpnNetworks = await ReadNetworks(_vpnListFile.Path);
         }
 
         if (_vpnNetworks.Any(x => x.Contains(ipAddress)))
         {
-            result |= X4BNetListsVpnResults.Vpn;
+            result |= X4BNetListsFlags.Vpn;
         }
 
-        if (_datacenterListFile.HasNewWrites(true))
+        if (_datacenterListFile.LastWriteTimeHasChanged(true))
         {
             _dataCenterNetworks = await ReadNetworks(_datacenterListFile.Path);
         }
 
         if (_dataCenterNetworks.Any(x => x.Contains(ipAddress)))
         {
-            result |= X4BNetListsVpnResults.DataCenter;
+            result |= X4BNetListsFlags.DataCenter;
         }
 
         return result;
