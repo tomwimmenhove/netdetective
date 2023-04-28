@@ -34,9 +34,7 @@ builder.WebHost.ConfigureKestrel(options =>
 
 var app = builder.Build();
 
-#if !DEBUG
 app.UseMiddleware<ConnectionValidation>();
-#endif
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

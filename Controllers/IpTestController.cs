@@ -10,15 +10,13 @@ namespace netdetective.Controllers;
 [Route("[controller]")]
 public class IpTestController : ControllerBase
 {
-    private readonly ILogger<IpTestController> _logger;
     private readonly IpTestControllerSettings _settings;
     private readonly IIpTestFactory _ipTestFactory;
     private readonly IRapidApiRequestInfoProvider _requestInfoProvider;
 
-    public IpTestController(ILogger<IpTestController> logger, IIpTestFactory ipTestFactory,
+    public IpTestController(IIpTestFactory ipTestFactory,
         IOptions<IpTestControllerSettings> settings, IRapidApiRequestInfoProvider requestInfoProvider)
     {
-        _logger = logger;
         _ipTestFactory = ipTestFactory;
         _settings = settings.Value;
         _requestInfoProvider = requestInfoProvider;
@@ -39,12 +37,7 @@ public class IpTestController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(SimpleErrorResponeDto))]
     public async Task<IActionResult> Query([FromQuery(Name = "ipaddress")] string? ipAddress = null)
     {
-        var clientIp = _requestInfoProvider.GetClientAddresses().FirstOrDefault()?.ToString();
-
-        _logger.LogInformation($"{clientIp} - " +
-            $"query: username=\"{_requestInfoProvider.GetUsername()}\", ipaddress=\"{ipAddress}\"");
-
-        ipAddress ??= clientIp;
+        ipAddress ??= _requestInfoProvider.GetClientAddresses().FirstOrDefault()?.ToString();
         if (ipAddress == null)
         {
             return BadRequest(new SimpleErrorResponeDto { Message = "Unable to determine IP address"});            
