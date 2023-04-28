@@ -26,10 +26,10 @@ public class DnsBl
         return new DnsBl(servers);
     }
 
-    public async Task<DnsBlResponseType> Test(string ipAddress, CancellationToken token) =>
+    public async Task<DnsBlFlags> Test(string ipAddress, CancellationToken token) =>
         await Test(IPAddress.Parse(ipAddress), token);
 
-    public async Task<DnsBlResponseType> Test(IPAddress ipAddress, CancellationToken token)
+    public async Task<DnsBlFlags> Test(IPAddress ipAddress, CancellationToken token)
     {
         var testLookupTasks = _servers.Select(x => new
             {
@@ -38,7 +38,7 @@ public class DnsBl
                     .ReverseIpAddress() + '.' + x.Server, QueryType.A, cancellationToken: token)
             }).ToList();
 
-        var results = DnsBlResponseType.None;
+        var results = DnsBlFlags.None;
         while (testLookupTasks.Any())
         {
             var task = await Task.WhenAny(testLookupTasks.Select(x => x.Task));

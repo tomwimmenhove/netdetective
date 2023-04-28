@@ -21,7 +21,6 @@
     "TimeOut": 1500
   },
   "Auth": {
-    "SecretHeader": "Secret",
     "SecretValue": "VerySecret"
   }
 }

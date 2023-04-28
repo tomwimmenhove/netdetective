@@ -1,7 +1,7 @@
-using System.ComponentModel.DataAnnotations;
 using netdetective.IpTests;
 using netdetective.Controllers;
 using netdetective.Auth;
+using netdetective.RequestInfoProviders;
 
 IConfiguration configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
@@ -13,16 +13,17 @@ builder.Services.Configure<IpInfoSettings>(configuration.GetSection("IpInfoSetti
 builder.Services.Configure<IpTestControllerSettings>(configuration.GetSection("IpTestControllerSettings"));
 builder.Services.Configure<ConnectionValidationSettings>(configuration.GetSection("Auth"));
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IRapidApiRequestInfoProvider, RapidApiRequestInfoProvider>();
 builder.Services.AddSingleton<IIpTestFactory, IpInfoFactory>();
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 builder.WebHost.ConfigureKestrel(options =>
 {
     options.Configure(configuration.GetSection("Kestrel"));
 });
-
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -36,22 +37,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
-
-
-public class IpInfoSettings
-{
-    [Required]
-    public string VpnListPath { get; set; } = default!;
-
-    [Required]
-    public string DatacenterListPath { get; set; } = default!;
-
-    [Required]
-    public string DnsBlDatabasePath { get; set; } = default!;
-}

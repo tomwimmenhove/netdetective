@@ -5,10 +5,10 @@ namespace netdetective.IpTests;
 
 public class IpInfoResults
 {
-    [Description("The IP address being queried")]
+    [Description("The IP address being queried.")]
     public string IpAddress {get; }
 
-    [Description("The IP address is a VPN")]
+    [Description("The IP address is a VPN.")]
     public bool IsVpn { get; }
     
     [Description("Indicates whether the IP address belongs to a data center.")]
@@ -47,7 +47,7 @@ public class IpInfoResults
     [Description("The IP address is a zombie (i.e., part of a botnet).")]
     public bool IsZombie { get; }
 
-    [Description("The IP address is a potential bot.")]
+    [Description("The IP address is a potential zombie.")]
     public bool IsPotentialZombie { get; }
     
     [Description("The IP address is dynamically assigned.")]
@@ -77,33 +77,33 @@ public class IpInfoResults
     [Description("The IP address is not associated with spamming.")]
     public bool IsNotSpam { get; }
     
-    public IpInfoResults(string ipAddress, X4BNetListsVpnResults vpnListResults, DnsBlResponseType dnsBlResponse)
+    public IpInfoResults(string ipAddress, X4BNetListsVpnResults vpnListResults, DnsBlFlags dnsBlResponse)
     {
         IpAddress = ipAddress;
         
         IsVpn = vpnListResults.HasFlag(X4BNetListsVpnResults.Vpn);
         IsDataCenter = vpnListResults.HasFlag(X4BNetListsVpnResults.DataCenter);
 
-        IsBruteForce = dnsBlResponse.HasFlag(DnsBlResponseType.BruteForce);
-        IsSpam = dnsBlResponse.HasFlag(DnsBlResponseType.Spam);
-        IsBogon = dnsBlResponse.HasFlag(DnsBlResponseType.Bogon);
-        IsProxyHttp = dnsBlResponse.HasFlag(DnsBlResponseType.ProxyHttp);
-        IsProxySocks = dnsBlResponse.HasFlag(DnsBlResponseType.ProxySocks);
-        IsProxyOther = dnsBlResponse.HasFlag(DnsBlResponseType.ProxyOther);
-        IsSmtpRelay = dnsBlResponse.HasFlag(DnsBlResponseType.SmtpRelay);
-        IsWebVuln = dnsBlResponse.HasFlag(DnsBlResponseType.WebVuln);
-        IsNoMail = dnsBlResponse.HasFlag(DnsBlResponseType.NoMail);
-        IsZombie = dnsBlResponse.HasFlag(DnsBlResponseType.Zombie);
-        IsPotentialZombie = dnsBlResponse.HasFlag(DnsBlResponseType.PotentialZombie);
-        IsDynamic = dnsBlResponse.HasFlag(DnsBlResponseType.Dynamic);
-        IsNoServer = dnsBlResponse.HasFlag(DnsBlResponseType.NoServer);
-        IsBadConf = dnsBlResponse.HasFlag(DnsBlResponseType.BadConf);
-        IsProxyWeb = dnsBlResponse.HasFlag(DnsBlResponseType.ProxyWeb);
-        IsDDos = dnsBlResponse.HasFlag(DnsBlResponseType.DDos);
-        IsOpenDns = dnsBlResponse.HasFlag(DnsBlResponseType.OpenDns);
-        IsCompromised = dnsBlResponse.HasFlag(DnsBlResponseType.Compromised);
-        IsWorm = dnsBlResponse.HasFlag(DnsBlResponseType.Worm);
-        IsIrcDrone = dnsBlResponse.HasFlag(DnsBlResponseType.IrcDrone);
-        IsNotSpam = dnsBlResponse.HasFlag(DnsBlResponseType.NoSpam);
+        IsBruteForce = dnsBlResponse.HasFlag(DnsBlFlags.BruteForce);
+        IsSpam = dnsBlResponse.HasFlag(DnsBlFlags.Spam);
+        IsBogon = dnsBlResponse.HasFlag(DnsBlFlags.Bogon);
+        IsProxyHttp = dnsBlResponse.HasFlag(DnsBlFlags.ProxyHttp);
+        IsProxySocks = dnsBlResponse.HasFlag(DnsBlFlags.ProxySocks);
+        IsProxyOther = dnsBlResponse.HasFlag(DnsBlFlags.ProxyOther);
+        IsSmtpRelay = dnsBlResponse.HasFlag(DnsBlFlags.SmtpRelay);
+        IsWebVuln = dnsBlResponse.HasFlag(DnsBlFlags.WebVuln);
+        IsNoMail = dnsBlResponse.HasFlag(DnsBlFlags.NoMail);
+        IsZombie = dnsBlResponse.HasFlag(DnsBlFlags.Zombie);
+        IsPotentialZombie = dnsBlResponse.HasFlag(DnsBlFlags.PotentialZombie);
+        IsDynamic = dnsBlResponse.HasFlag(DnsBlFlags.Dynamic);
+        IsNoServer = dnsBlResponse.HasFlag(DnsBlFlags.NoServer);
+        IsBadConf = dnsBlResponse.HasFlag(DnsBlFlags.BadConf);
+        IsProxyWeb = dnsBlResponse.HasFlag(DnsBlFlags.ProxyWeb);
+        IsDDos = dnsBlResponse.HasFlag(DnsBlFlags.DDos);
+        IsOpenDns = dnsBlResponse.HasFlag(DnsBlFlags.OpenDns);
+        IsCompromised = dnsBlResponse.HasFlag(DnsBlFlags.Compromised);
+        IsWorm = dnsBlResponse.HasFlag(DnsBlFlags.Worm);
+        IsIrcDrone = dnsBlResponse.HasFlag(DnsBlFlags.IrcDrone);
+        IsNotSpam = dnsBlResponse.HasFlag(DnsBlFlags.NoSpam);
     }
 }
